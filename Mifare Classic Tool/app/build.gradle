@@ -4,7 +4,7 @@ plugins {
 
 android {
     compileSdk 33
-
+    buildToolsVersion '33.0.2'
     defaultConfig {
         applicationId "de.syss.MifareClassicTool"
         minSdk 19
@@ -20,7 +20,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '33.0.2'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
