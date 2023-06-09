@@ -1432,6 +1432,7 @@ public class WriteTag extends BasicActivity {
      * user via Toast.
      * @see #onActivityResult(int, int, Intent)
      * @see #onWriteValue(android.view.View)
+     * 充值/消费金额
      */
     private void writeValueBlock() {
         // Write the new value (incr./decr. + transfer).
