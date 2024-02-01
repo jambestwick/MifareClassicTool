@@ -1,3 +1,4 @@
+
 Changelog of MifareClassicTool (MCT):
 
 In development:
