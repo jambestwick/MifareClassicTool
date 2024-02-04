@@ -20,6 +20,7 @@ package de.syss.MifareClassicTool;
 
 import static de.syss.MifareClassicTool.Activities.Preferences.Preference.AutoCopyUID;
 import static de.syss.MifareClassicTool.Activities.Preferences.Preference.UIDFormat;
+import static de.syss.MifareClassicTool.util.FileUtil.dsrcReadOBUAnd0015;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -33,12 +34,15 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.NfcA;
 import android.os.Build;
+import android.os.FileUtils;
 import android.provider.OpenableColumns;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -67,9 +71,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import de.syss.MifareClassicTool.Activities.IActivityThatReactsToSave;
+import de.syss.MifareClassicTool.db.Product;
+import de.syss.MifareClassicTool.db.database.ProductDatabases;
+import de.syss.MifareClassicTool.util.ExcelUtils;
+import de.syss.MifareClassicTool.util.FileUtil;
+import de.syss.MifareClassicTool.util.RandomUtil;
 
 
 /**
@@ -212,6 +224,11 @@ public class Common extends Application {
 
     private static NfcAdapter mNfcAdapter;
     private static Context mAppContext;
+
+    public static Context getAppContext() {
+        return mAppContext;
+    }
+
     private static float mScale;
 
 // ############################################################################
@@ -232,6 +249,39 @@ public class Common extends Application {
         } catch (NameNotFoundException e) {
             Log.d(LOG_TAG, "Version not found.");
         }
+
+//        for (int i = 0; i < 100; i++) {
+//            String countryCode = "692";
+//            String manufacturer = "1110";
+//            String category = RandomUtil.generateRandomNumber(5);
+//            String xor = RandomUtil.generateRandomNumber(1);
+//            String productName = RandomUtil.generateRandomChinese(4);
+//            int count = Integer.parseInt(RandomUtil.generateRandomNumber(1)) + 1;
+//            int price = Integer.parseInt(RandomUtil.generateRandomNumber(4));
+//            String remark = RandomUtil.generateRandomChinese(10);
+//
+//            Product product = new Product(countryCode + manufacturer + category + xor, countryCode, manufacturer, category, productName, count, price, remark);
+//            ProductDatabases.getUserDao().addProduct(product);
+//        }
+//        List<Product> list = ProductDatabases.getUserDao().queryProduct();
+//        System.out.println(list);
+//        Log.d("Common", "onCreate: test DB" + list);
+
+        File file = new File(FileUtil.getSDPath() + "/Record");
+        FileUtil.makeDir(file);
+        String fileName = file.toString() + "/商品表.xls";
+//        String[] title = {"id", "scanCode", "countryCode", "manufacturer", "category", "productName", "count", "price", "remark"};
+//        ExcelUtils.initExcel(fileName, title);
+//        ExcelUtils.writeObjListToExcel(list, fileName, this);
+        //FileUtil.exportFile(fileName);
+        //FileUtil.exportFileToComputer(fileName,Common.getAppContext());
+//        try {
+//            Runtime.getRuntime().exec("adb pull " + fileName + " ~/Desktop/");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
     }
 
     /**

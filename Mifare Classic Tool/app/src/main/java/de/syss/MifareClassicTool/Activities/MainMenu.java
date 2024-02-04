@@ -53,9 +53,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.Executors;
 
 import de.syss.MifareClassicTool.Common;
 import de.syss.MifareClassicTool.R;
+import de.syss.MifareClassicTool.util.FileUtil;
+import de.syss.MifareClassicTool.util.RetrofitService;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -133,6 +140,39 @@ public class MainMenu extends Activity {
 
         initFolders();
         copyStdKeysFiles();
+        File file = new File(FileUtil.getSDPath() + "/Record");
+        FileUtil.makeDir(file);
+        String fileName = file.toString() + "/商品表.xls";
+//        String[] title = {"id", "scanCode", "countryCode", "manufacturer", "category", "productName", "count", "price", "remark"};
+//        ExcelUtils.initExcel(fileName, title);
+//        ExcelUtils.writeObjListToExcel(list, fileName, this);
+        //FileUtil.exportFile(fileName);
+        //FileUtil.exportFileToComputer(fileName,this);
+        try {
+            for (int i = 0; i < 1000; i++) {
+                Executors.newCachedThreadPool().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        RetrofitService.getInstance().upload(FileUtil.buildUploadFile(fileName)).enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                Log.d("onResponse", "onResponse: "+response.body().toString());
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Log.d("onFailure", "onFailure: "+t.toString());
+                            }
+                        });
+                    }
+                });
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
